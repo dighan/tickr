@@ -18,6 +18,33 @@ or include it with a [`<script>`](https://developer.mozilla.org/en-US/docs/Web/H
 ```html
 <script src="TBD" async></script>
 ```
+## Usage
+
+Intended to be bundled:
+
+```js
+import createTicker from 'Tickr'
+
+const ticker = createTicker({ delay: 250 }, function() {
+  console.log(
+    ticker.getDelay(),
+    ticker.getImmediate(),
+    ticker.getMaxTicks()
+  )
+}).start()
+```
+
+or in the browser:
+
+```js
+const ticker = Tickr.createTicker({ delay: 250 }, function() {
+  console.log(
+    ticker.getDelay(),
+    ticker.getImmediate(),
+    ticker.getMaxTicks()
+  )
+}).start()
+```
 
 ## License
 
