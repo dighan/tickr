@@ -1,0 +1,28 @@
+{
+  "name": "tickr",
+  "version": "1.0.0",
+  "description": "No dependency and tiny (`<1kB`) JavaScript library to execute code repeatedly with a fixed or dynamic delay",
+  "author": "Yvan Michel <ymichel.k@gmail.com>",
+  "license": "MIT",
+  "main": "dist/tickr.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dighan/tickr.git"
+  },
+  "scripts": {
+    "build": "npm run build:dev && npm run build:prod",
+    "build:dev": "cross-env NODE_ENV=development rollup -c -o dist/tickr.js",
+    "build:prod": "cross-env NODE_ENV=production rollup -c -o dist/tickr.min.js",
+    "test": "ava -v"
+  },
+  "devDependencies": {
+    "ava": "^0.20.0",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "cross-env": "^5.1.0",
+    "lolex": "^2.3.1",
+    "rollup": "^0.52.3",
+    "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-uglify": "^2.0.1"
+  }
+}
