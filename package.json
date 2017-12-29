@@ -13,7 +13,7 @@
     "build": "npm run build:dev && npm run build:prod",
     "build:dev": "cross-env NODE_ENV=development rollup -c -o dist/tickr.js",
     "build:prod": "cross-env NODE_ENV=production rollup -c -o dist/tickr.min.js",
-    "test": "ava -v"
+    "test": "npm run build:dev && ava --verbose --fail-fast"
   },
   "devDependencies": {
     "ava": "^0.20.0",
@@ -23,6 +23,7 @@
     "lolex": "^2.3.1",
     "rollup": "^0.52.3",
     "rollup-plugin-babel": "^3.0.2",
-    "rollup-plugin-uglify": "^2.0.1"
+    "rollup-plugin-uglify": "^2.0.1",
+    "sinon": "^4.1.3"
   }
 }

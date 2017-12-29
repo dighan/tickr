@@ -4,67 +4,41 @@
 	(global.Tickr = factory());
 }(this, (function () { 'use strict';
 
-/**
- * The default options, Tickr will use if none specified.
- */
-var DEFAULT_OPTIONS = {
-  /**
-    * @type {Boolean} Start automatically the ticker after its creation.
-    */
-  autoStart: false,
-  /**
-    * @type {Number} The delay between tick in millisec.
-    */
-  delay: 0,
+function createTicker(options, callback) {
+  var DEFAULT_OPT = {
+    autoStart: false,
+    delay: 0,
+    immediate: false,
+    maxTicks: Infinity
+  };
 
-  /**
-    * @type {Boolean} Invoke immediately the callback without waiting the first
-    * tick is executed at specified delay.
-    */
-  immediate: false
-
-  /**
-   * Factories an independent ticker with its own timer.
-   *
-   * @param {Object} options An object containing options to customise the ticker.
-   * @param {Function} callback A function that will be called at every tick.
-   * @return {Object} A new ticker with helpers to control its internal timer.
-   */
-};function createTicker(options, callback) {
   var id = 0;
-  var opt = Object.assign({}, DEFAULT_OPTIONS, options);
-
-  if (opt.autoStart) {
-    start();
-  }
+  var opt = Object.assign(DEFAULT_OPT, options);
 
   function start() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
         _ref$delay = _ref.delay,
         delay = _ref$delay === undefined ? opt.delay : _ref$delay,
         _ref$immediate = _ref.immediate,
-        immediate = _ref$immediate === undefined ? opt.immediate : _ref$immediate;
+        immediate = _ref$immediate === undefined ? opt.immediate : _ref$immediate,
+        _ref$maxTicks = _ref.maxTicks,
+        maxTicks = _ref$maxTicks === undefined ? opt.maxTicks : _ref$maxTicks;
 
-    if (delay !== opt.delay) {
-      opt.delay = delay;
-      stop();
+    if (typeof delay !== 'number' || delay <= 0) {
+      throw new TypeError('Expect "delay" to be greater than 0, "' + delay + '" given');
     }
 
-    if (immediate !== opt.immediate) {
-      opt.immediate = immediate;
+    if (typeof callback !== 'function') {
+      throw new TypeError('Expect "callback" to be a function, "' + callback + '" given');
     }
 
-    if (id === 0 && opt.delay > 0) {
-      id = setInterval(tick, opt.delay);
+    opt.delay = delay;
+    opt.immediate = immediate;
+    opt.maxTicks = maxTicks;
 
-      if (opt.immediate) {
-        tick();
-      }
+    if (id === 0) {
+      id = setInterval(callback, opt.delay);
     }
-  }
-
-  function tick() {
-    callback();
   }
 
   function stop() {
@@ -74,14 +48,21 @@ var DEFAULT_OPTIONS = {
     }
   }
 
-  function getOptions() {
-    return opt;
-  }
-
   return {
-    getOptions: getOptions,
     start: start,
-    stop: stop
+    stop: stop,
+    getAutoStart: function getAutoStart() {
+      return opt.autoStart;
+    },
+    getDelay: function getDelay() {
+      return opt.delay;
+    },
+    getImmediate: function getImmediate() {
+      return opt.immediate;
+    },
+    getMaxTicks: function getMaxTicks() {
+      return opt.maxTicks;
+    }
   };
 }
 

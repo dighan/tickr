@@ -1,59 +1,30 @@
-/**
- * The default options, Tickr will use if none specified.
- */
-const DEFAULT_OPTIONS = {
-  /**
-    * @type {Boolean} Start automatically the ticker after its creation.
-    */
-  autoStart: false,
-  /**
-    * @type {Number} The delay between tick in millisec.
-    */
-  delay: 0,
-
-  /**
-    * @type {Boolean} Invoke immediately the callback without waiting the first
-    * tick is executed at specified delay.
-    */
-  immediate: false
-}
-
-/**
- * Factories an independent ticker with its own timer.
- *
- * @param {Object} options An object containing options to customise the ticker.
- * @param {Function} callback A function that will be called at every tick.
- * @return {Object} A new ticker with helpers to control its internal timer.
- */
 export default function createTicker(options, callback) {
-  let id  = 0
-  let opt = Object.assign({}, DEFAULT_OPTIONS, options)
-
-  if (opt.autoStart) {
-    start()
+  const DEFAULT_OPT = {
+    autoStart: false,
+    delay: 0,
+    immediate: false,
+    maxTicks: Infinity
   }
 
-  function start({ delay = opt.delay, immediate = opt.immediate } = {}) {
-    if (delay !== opt.delay) {
-      opt.delay = delay
-      stop()
+  let id = 0
+  let opt = Object.assign(DEFAULT_OPT, options)
+
+  function start({ delay = opt.delay, immediate = opt.immediate, maxTicks = opt.maxTicks } = {}) {
+    if (typeof delay !== 'number' || delay <= 0) {
+      throw new TypeError(`Expect "delay" to be greater than 0, "${delay}" given`)
     }
 
-    if (immediate !== opt.immediate) {
-      opt.immediate = immediate
+    if (typeof callback !== 'function') {
+      throw new TypeError(`Expect "callback" to be a function, "${callback}" given`)
     }
 
-    if (id === 0 && opt.delay > 0) {
-      id = setInterval(tick, opt.delay) 
+    opt.delay = delay
+    opt.immediate = immediate
+    opt.maxTicks = maxTicks
 
-      if (opt.immediate) {
-        tick()
-      }
+    if (id === 0) {
+      id = setInterval(callback, opt.delay)
     }
-  }
-
-  function tick() {
-    callback()
   }
 
   function stop() {
@@ -63,13 +34,12 @@ export default function createTicker(options, callback) {
     }
   }
 
-  function getOptions() {
-    return opt
-  }
-
   return {
-    getOptions,
     start,
-    stop
+    stop,
+    getAutoStart: () => opt.autoStart,
+    getDelay: () => opt.delay,
+    getImmediate: () => opt.immediate,
+    getMaxTicks: () => opt.maxTicks
   }
 }
