@@ -1,6 +1,5 @@
 export default function createTicker(options, callback) {
   const DEFAULT_OPT = {
-    autoStart: false,
     delay: 0,
     immediate: false,
     maxTicks: Infinity
@@ -18,13 +17,19 @@ export default function createTicker(options, callback) {
       throw new TypeError(`Expect "callback" to be a function, "${callback}" given`)
     }
 
-    opt.delay = delay
+    if (delay !== opt.delay) {
+      opt.delay = delay
+      stop()
+    }
+
     opt.immediate = immediate
     opt.maxTicks = maxTicks
 
     if (id === 0) {
       id = setInterval(callback, opt.delay)
     }
+
+    return this
   }
 
   function stop() {
@@ -37,7 +42,6 @@ export default function createTicker(options, callback) {
   return {
     start,
     stop,
-    getAutoStart: () => opt.autoStart,
     getDelay: () => opt.delay,
     getImmediate: () => opt.immediate,
     getMaxTicks: () => opt.maxTicks

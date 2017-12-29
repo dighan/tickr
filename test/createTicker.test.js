@@ -9,14 +9,12 @@ test.beforeEach(t => {
 })
 
 test('Uses default options when not specified', t => {
-  t.false(createTicker().getAutoStart())
   t.is(createTicker().getDelay(), 0)
   t.false(createTicker().getImmediate())
   t.is(createTicker().getMaxTicks(), Infinity)
 })
 
 test('Uses third options when specified', t => {
-  t.true(createTicker({ autoStart: true }).getAutoStart())
   t.is(createTicker({ delay: 1000 }).getDelay(), 1000)
   t.true(createTicker({ immediate: true }).getImmediate())
   t.is(createTicker({ maxTicks: 5 }).getMaxTicks(), 5)
@@ -47,8 +45,7 @@ test('Throws an exception when the "callback" is invalid', t => {
 test('Invokes callback when the "delay" is greater than 0', t => {
   const callback = sinon.spy()
 
-  const ticker = createTicker({ delay: 1000 }, callback)
-  ticker.start()
+  const ticker = createTicker({ delay: 1000 }, callback).start()
   t.context.clock.tick(1000)
 
   t.true(callback.calledOnce)

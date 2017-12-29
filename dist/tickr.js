@@ -6,7 +6,6 @@
 
 function createTicker(options, callback) {
   var DEFAULT_OPT = {
-    autoStart: false,
     delay: 0,
     immediate: false,
     maxTicks: Infinity
@@ -32,13 +31,19 @@ function createTicker(options, callback) {
       throw new TypeError('Expect "callback" to be a function, "' + callback + '" given');
     }
 
-    opt.delay = delay;
+    if (delay !== opt.delay) {
+      opt.delay = delay;
+      stop();
+    }
+
     opt.immediate = immediate;
     opt.maxTicks = maxTicks;
 
     if (id === 0) {
       id = setInterval(callback, opt.delay);
     }
+
+    return this;
   }
 
   function stop() {
@@ -51,9 +56,6 @@ function createTicker(options, callback) {
   return {
     start: start,
     stop: stop,
-    getAutoStart: function getAutoStart() {
-      return opt.autoStart;
-    },
     getDelay: function getDelay() {
       return opt.delay;
     },
