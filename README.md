@@ -1,4 +1,4 @@
-# Tickr
+# Tickr [![Build Status](https://travis-ci.org/dighan/tickr.svg?branch=master)](https://travis-ci.org/dighan/tickr)
 
 No dependency and tiny (`<1kB`) JavaScript library to execute code repeatedly with a fixed or dynamic delay.
 
